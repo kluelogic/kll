@@ -1,0 +1,22 @@
+# -*-Shell-script-*-
+#
+# my_layer1.kll
+#
+
+Name = my_layer1;
+Version = 0.1;
+Author = "Keisuke Shimizu";
+KLL = 0.3d;
+
+# Modified Date
+
+Date = 2016-04-16;
+
+U"9"     : U"Equals";
+U"0"     : U"Backslash";
+U"Minus" : U"Backtick";
+
+U"P"        : U"LBracket";
+U"RBracket" : U"RBracket";
+
+U"Quote" : U"Quote";

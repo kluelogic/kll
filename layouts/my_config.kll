@@ -1,0 +1,57 @@
+# -*-Shell-script-*-
+#
+# my_config.kll
+#
+
+Name = my_config;
+Version = 0.4;
+Author = "Keisuke Shimizu";
+KLL = 0.3d;
+
+# Modified Date
+
+Date = 2016-04-03;
+
+# Left
+
+'='          : U"Esc";
+'\'          : U"Tab";
+U"Tab"       : U"LCtrl";
+U"LGui"      : None;
+
+'`'          : None;
+U"Function3" : None;
+U"Function4" : None;
+U"Function5" : None;
+
+U"Esc"       : None;
+U"Function1" : None;
+U"Function2" : None;
+U"Backspace" : U"Space";
+
+U"LCtrl"     : None;
+U"Delete"    : None;
+U"LAlt"      : None;
+U"Home"      : None;
+U"End"       : None;
+
+# Right
+
+U"RCtrl"     : U"Right";
+U"Enter"     : None;
+U"RAlt"      : U"Left";
+U"PageUp"    : U"Up";
+U"PageDown"  : U"Down";
+
+U"Function6" : U"Function1";
+'['          : None;
+U"Function7" : None;
+
+U"Left"      : U"Latch1";
+U"Down"      : U"Lock2";
+U"Up"        : None;
+U"Right"     : None;
+
+']'          : U"Backspace";
+U"Quote"     : U"Enter";
+U"RGui"      : None;

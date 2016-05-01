@@ -1,0 +1,39 @@
+# -*-Shell-script-*-
+#
+# my_layer2.kll
+#
+
+Name = my_layer2;
+Version = 0.1;
+Author = "Keisuke Shimizu";
+KLL = 0.3d;
+
+# Modified Date
+
+Date = 2016-04-16;
+
+# Use the original triggers defiend in Scan/MDErgo1/rightHand.kll
+
+U"6" :   ledControl(  5, 0x00, 0 ); #  LedControlMode_brightness_set_all OFF
+U"7" :   ledControl(  5, 0xFF, 0 ); #  LedControlMode_brightness_set_all ON (0xFF=highest brightness)
+U"8" : myLedControl( 22, 0x08, 0 ); #  MyLedControlMode_set_auto_frame_play_mode MODE=1, FS=0
+
+U"Y"         : myLedControl(  0, 0x01, 0 ); #  MyLedControlMode_rotate_MODE amount=1
+U"U"         : myLedControl(  1, 0x01, 0 ); #  MyLedControlMode_rotate_FS   amount=1
+U"I"         : myLedControl(  2, 0x01, 0 ); #  MyLedControlMode_rotate_PFS  amount=1
+U"O"         : myLedControl(  3, 0x01, 0 ); #  MyLedControlMode_rotate_CNS  amount=1
+U"P"         : myLedControl(  4, 0x01, 0 ); #  MyLedControlMode_rotate_FNS  amount=1
+U"RBracket"  : myLedControl(  5, 0x01, 0 ); #  MyLedControlMode_rotate_FDT  amount=1
+U"H"         : myLedControl(  6, 0x01, 0 ); #  MyLedControlMode_rotate_IC   amount=1
+U"J"         : myLedControl(  7, 0x01, 0 ); #  MyLedControlMode_rotate_BE   amount=1
+U"K"         : myLedControl(  8, 0x01, 0 ); #  MyLedControlMode_rotate_BPT  amount=1
+U"L"         : myLedControl(  9, 0x01, 0 ); #  MyLedControlMode_rotate_AE   amount=1
+U"Semicolon" : myLedControl( 10, 0x01, 0 ); #  MyLedControlMode_rotate_FOT  amount=1
+U"Quote"     : myLedControl( 11, 0x01, 0 ); #  MyLedControlMode_rotate_FIT  amount=1
+U"N"         : myLedControl( 12, 0x01, 0 ); #  MyLedControlMode_rotate_B_EN amount=1
+U"M"         : myLedControl( 13, 0x01, 0 ); #  MyLedControlMode_rotate_ET   amount=1
+U"RGui"      : myLedControl( 14, 0x01, 0 ); #  MyLedControlMode_rotate_SSD  amount=1
+U"Comma"     : myLedControl( 15, 0x01, 0 ); #  MyLedControlMode_rotate_AGCM amount=1
+U"Period"    : myLedControl( 16, 0x01, 0 ); #  MyLedControlMode_rotate_AGC  amount=1
+U"Slash"     : myLedControl( 17, 0x01, 0 ); #  MyLedControlMode_rotate_AGS  amount=1
+U"RShift"    : myLedControl( 18, 0x01, 0 ); #  MyLedControlMode_rotate_AAR  amount=1
