@@ -9,7 +9,7 @@ Date = 2015-09-29;
 # Maps each Function key incrementally to each layer
 # Unused layers and functions are ignored
 
-U"Function1" :: layerShift( 1 ) + LCDLayerDisplay();
+#U"Function1" :: layerShift( 1 ) + LCDLayerDisplay();
 U"Function2" :: layerShift( 2 ) + LCDLayerDisplay();
 U"Function3" :: layerShift( 3 ) + LCDLayerDisplay();
 U"Function4" :: layerShift( 4 ) + LCDLayerDisplay();
