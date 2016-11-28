@@ -4,19 +4,19 @@
 #
 
 Name = my_layer2;
-Version = 0.1;
+Version = 0.2;
 Author = "Keisuke Shimizu";
 KLL = 0.3d;
 
 # Modified Date
 
-Date = 2016-04-16;
+Date = 2016-11-26;
 
 # Use the original triggers defiend in Scan/MDErgo1/rightHand.kll
 
-U"6" :   ledControl(  5, 0x00, 0 ); #  LedControlMode_brightness_set_all OFF
-U"7" :   ledControl(  5, 0xFF, 0 ); #  LedControlMode_brightness_set_all ON (0xFF=highest brightness)
-U"8" : myLedControl( 22, 0x08, 0 ); #  MyLedControlMode_set_auto_frame_play_mode MODE=1, FS=0
+#U"6" :   ledControl(  5, 0x00, 0 ); #  LedControlMode_brightness_set_all OFF
+#U"7" :   ledControl(  5, 0xFF, 0 ); #  LedControlMode_brightness_set_all ON (0xFF=highest brightness)
+#U"8" : myLedControl( 22, 0x08, 0 ); #  MyLedControlMode_set_auto_frame_play_mode MODE=1, FS=0
 
 U"Minus"     : myLedControl(  0, 0x01, 0 ); #  MyLedControlMode_rotate_MODE amount=1
 U"K"         : myLedControl(  1, 0x01, 0 ); #  MyLedControlMode_rotate_FS   amount=1

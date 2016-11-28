@@ -4,13 +4,13 @@
 #
 
 Name = my_config;
-Version = 0.4;
+Version = 0.6;
 Author = "Keisuke Shimizu";
 KLL = 0.3d;
 
 # Modified Date
 
-Date = 2016-04-03;
+Date = 2016-11-27;
 
 # Left
 
@@ -24,7 +24,7 @@ U"Function3" : None;
 U"Function4" : None;
 U"Function5" : None;
 
-U"Esc"       : None;
+U"Esc"       : '6';
 U"Function1" : None;
 U"Function2" : None;
 U"Backspace" : U"Space";
@@ -37,21 +37,28 @@ U"End"       : None;
 
 # Right
 
-U"RCtrl"     : U"Right";
-U"Enter"     : None;
 U"RAlt"      : U"Left";
 U"PageUp"    : U"Up";
 U"PageDown"  : U"Down";
+U"RCtrl"     : U"Right";
+U"Enter"     : None;
 
-U"Function6" : U"Function1";
-'['          : None;
-U"Function7" : None;
+U"Function6" : '7';
+'['          : U"Function1";
+U"Function7" : U"Function2";
+
+'6'          : '8';
+'7'          : '9';
+'8'          : '0';
+'9'          : '-';
+'0'          : '=';
 
 U"Left"      : U"Latch1";
 U"Down"      : U"Lock2";
 U"Up"        : None;
 U"Right"     : None;
 
+'-'          : U"Backslash";
 ']'          : U"Backspace";
 U"Quote"     : U"Enter";
-U"RGui"      : None;
+U"RGui"      : U"Backtick";

@@ -4,17 +4,13 @@
 #
 
 Name = my_layer1;
-Version = 0.1;
+Version = 0.2;
 Author = "Keisuke Shimizu";
 KLL = 0.3d;
 
 # Modified Date
 
-Date = 2016-04-16;
-
-U"9"     : U"Equals";
-U"0"     : U"Backslash";
-U"Minus" : U"Backtick";
+Date = 2016-11-20;
 
 U"P"        : U"LBracket";
 U"RBracket" : U"RBracket";
