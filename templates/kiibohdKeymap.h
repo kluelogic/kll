@@ -136,3 +136,15 @@
 // - Layer State
 <|LayerState|>
 
+
+
+// ----- Key Positions -----
+
+// -- Physical Key Positions
+//
+// Index 0: Key 1
+// Each key has 6 dimensions
+// x,y,z and rx,ry,rz (rotation)
+// Units are in mm
+<|KeyPositions|>
+
