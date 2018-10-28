@@ -1212,7 +1212,7 @@ class OperationSpecificsStage(Stage):
             ('Comma', (r',', )),
             ('Parenthesis', (r'\(|\)', )),
             ('Percent', (r'-?(0|([1-9][0-9]*))%', )),
-            ('Number', (r'-?((0x[0-9a-fA-F]+)|(0|([1-9][0-9]*)))', )),
+            ('Number', (r'((0x[0-9a-fA-F]+)|(0|([1-9][0-9]*)))', )),
             ('Dash', (r'-', )),
             ('Plus', (r'\+', )),
             ('Name', (r'[A-Za-z_][A-Za-z_0-9]*', )),
@@ -2258,6 +2258,8 @@ class DataAnalysisStage(Stage):
         self.max_scan_code = []
         self.min_scan_code = []
 
+        self.rotation_map = dict()
+
         self.interconnect_scancode_offsets = []
         self.interconnect_pixel_offsets = []
 
@@ -2514,6 +2516,49 @@ class DataAnalysisStage(Stage):
             if self.data_analysis_debug or self.data_analysis_display:
                 print("\033[1mTrigger List\033[0m: {0} {1}".format(index, self.trigger_lists[index]))
 
+    def generate_rotation_ranges(self):
+        '''
+        Generate Rotation Ranges
+
+        Using the reduced contexts determine the uids of the rotation triggers used.
+        And calculate the size of the rotation (so KLL knowns where the wrap-around occurs)
+
+        Currently only used for Generic Trigger 21
+        T[21,0](0) : <result>;
+        T[21,0](1) : <result>;
+        T[21,0](2) : <result>; # uid 0, range 0..2
+        T[21,3](6) : <result>; # uid 3, range 0..6
+
+        We don't need to worry about capabilities doing triggers that don't exist.
+        Those will be ignored at runtime.
+        '''
+        # Iterate over each layer
+        for layer in self.reduced_contexts:
+            # Iterate over each expression
+            for key, elem in layer.organization.mapping_data.data.items():
+                # Each trigger, may have multiple results
+                for sub_expr in elem:
+                    # Get list of ids from expression
+                    for identifier in sub_expr.trigger_id_list():
+                        # Determine if GenericTrigger
+                        if identifier.type in ['GenericTrigger'] and identifier.idcode == 21:
+                            # If uid not in rotation_map, add it
+                            if identifier.uid not in self.rotation_map.keys():
+                                self.rotation_map[identifier.uid] = 0
+
+                            # If there is no parameter raise an error
+                            if len(identifier.parameters) != 1:
+                                self._status = 'Incomplete'
+                                print("{} Rotation trigger must have 1 parameter e.g. T[21,1](3): {}".format(
+                                    ERROR,
+                                    elem,
+                                ))
+                                continue
+
+                            # Set the maximum rotation value
+                            if identifier.parameters[0].state > self.rotation_map[identifier.uid]:
+                                self.rotation_map[identifier.uid] = identifier.parameters[0].state
+
     def generate_pixel_display_mapping(self):
         '''
         Generate Pixel Display Mapping
@@ -2728,6 +2773,7 @@ class DataAnalysisStage(Stage):
             # Otherwise just add it, if there isn't a default
             if not found:
                 self.animation_settings[str_name] = val
+                self.animation_settings_orig[str_name] = val
                 self.animation_settings_list.append(str_name)
                 continue
 
@@ -2799,6 +2845,9 @@ class DataAnalysisStage(Stage):
         # Generate Trigger Lists
         self.generate_trigger_lists()
 
+        # Generate Rotation Ranges
+        self.generate_rotation_ranges()
+
     def process(self):
         '''
         Data Analysis Stage Processing
@@ -2820,6 +2869,10 @@ class DataAnalysisStage(Stage):
 
         # Analyze set of contexts
         self.analyze()
+
+        # Return if status has changed
+        if self._status != 'Running':
+            return
 
         self._status = 'Completed'
 

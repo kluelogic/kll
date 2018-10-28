@@ -508,6 +508,7 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
                 uid = animation_uid_lookup[identifier.name]
 
                 # Retrieve state
+                # TODO (HaaTa) Cannot use set directly here if using Off state...
                 states = set(identifier.strSchedule())
 
                 # Default to either Repeat or Done
@@ -554,6 +555,20 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
                 if uid < 256:
                     trigger_type = "TriggerType_LED1"
 
+                    # Check if states are given
+                    states = identifier.strSchedule()
+                    if len(states) > 0:
+                        state_list = []
+                        if 'A' in states:
+                            state_list.append("ScheduleType_A")
+                        if 'On' in states:
+                            state_list.append("ScheduleType_On")
+                        if 'D' in states:
+                            state_list.append("ScheduleType_D")
+                        if 'Off' in states:
+                            state_list.append("ScheduleType_Off")
+                        state = " | ".join(state_list)
+
                 else:
                     no_error = False
 
@@ -587,12 +602,17 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
                     0x12: 'TriggerType_Resume1',
                     0x13: 'TriggerType_Inactive1',
                     0x14: 'TriggerType_Active1',
+                    0x15: 'TriggerType_Rotation1',
                     0xFF: 'TriggerType_Debug',
                 }
                 if trigger_type in lookup.keys():
                     trigger_type = lookup[trigger_type]
 
                 uid = identifier.uid
+
+                # Rotations use state differently
+                if trigger_type == 'TriggerType_Rotation1':
+                    state = identifier.parameters[0]
 
             # Unknown/Invalid Id
             else:
@@ -672,6 +692,8 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
                 return 2
             if modifier.arg == 'state':
                 return 3
+            if modifier.arg == 'clear':
+                return 4
             print("{0} '{1}:{2}' is unsupported".format(WARNING, name, modifier))
             return 0
 
@@ -687,16 +709,19 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
         a_start = 1
         a_pause = 1
         a_stop = 1
+        a_single = 1
         if not animation.getModifier('start'):
             a_start = 0
         if not animation.getModifier('pause'):
             a_pause = 0
         if not animation.getModifier('stop'):
             a_stop = 0
+        if not animation.getModifier('single'):
+            a_single = 0
         # <index>        - Animation id (Animation__<name>)
         a_name = animation_name
         # <pos>          - Frame position
-        a_pos = self.animation_modifier_set(animation, 'frame')
+        a_pos = self.animation_modifier_set(animation, 'pos')
         # <subpos>       - Sub frame position
         a_subpos = 0
         # <loops>        - Number of loops, set to 0 for infinite
@@ -723,6 +748,8 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
             a_state = "AnimationPlayState_Stop"
         elif a_start == 1:
             a_state = "AnimationPlayState_Start"
+        elif a_single == 1:
+            a_state = "AnimationPlayState_Single"
         else:
             a_state = "AnimationPlayState_Pause"
 
@@ -780,6 +807,8 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
         trigger_lists = self.control.stage('DataAnalysisStage').trigger_lists
         interconnect_scancode_offsets = self.control.stage('DataAnalysisStage').interconnect_scancode_offsets
         interconnect_pixel_offsets = self.control.stage('DataAnalysisStage').interconnect_pixel_offsets
+
+        rotation_map = self.control.stage('DataAnalysisStage').rotation_map
 
         scancode_positions = self.control.stage('DataAnalysisStage').scancode_positions
         pixel_positions = self.control.stage('DataAnalysisStage').pixel_positions
@@ -1230,6 +1259,18 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
             # Add physical scancode positions and PixelId (if available) to json
             scancode_json.setdefault(key, dict()).update(entry)
 
+        ## Rotation Trigger Parameters
+        max_rotations = 0
+        if rotation_map.keys():
+            max_rotations = max(rotation_map.keys())
+        self.fill_dict['RotationParameters'] = 'const uint8_t Rotation_MaxParameter[] = {\n'
+        for key, entry in sorted(rotation_map.items()):
+            self.fill_dict['RotationParameters'] += '\t{}, // {}\n'.format(
+                entry,
+                key,
+            )
+        self.fill_dict['RotationParameters'] += '};'
+
         ## Pixel Buffer Setup ##
         # Only add sections if Pixel Buffer is defined
         self.use_pixel_map = 'Pixel_Buffer_Size' in defines.data.keys()
@@ -1253,6 +1294,82 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
                 variables.data[defines.data['Pixel_Buffer_Length'].name].value[bufsize - 1],
                 variables.data[defines.data['Pixel_Buffer_Size'].name].value[bufsize - 1],
             )
+
+            # Only include if defined
+            # XXX (HaaTa) This has to be done to make sure KLL compiler is still compatible with older KLL files
+            if 'LED_Buffer_Size' in variables.data.keys():
+                self.fill_dict['PixelBufferSetup'] += "\nPixelBuf LED_Buffers[] = {\n"
+
+                # Lookup number of buffers (LED)
+                ledbufsize = len(variables.data[defines.data['LED_Buffer_Size'].name].value)
+                for index in range(ledbufsize):
+                    self.fill_dict['PixelBufferSetup'] += "\tPixelBufElem( {0}, {1}, {2}, {3} ),\n".format(
+                        variables.data[defines.data['LED_Buffer_Length'].name].value[index],
+                        variables.data[defines.data['LED_Buffer_Width'].name].value[index],
+                        variables.data[defines.data['LED_Buffer_Size'].name].value[index],
+                        variables.data[defines.data['LED_Buffer_Buffer'].name].value[index],
+                    )
+                self.fill_dict['PixelBufferSetup'] += "};"
+
+                # Add LED fade group(s)
+                self.fill_dict['PixelFadeConfig'] = ""
+                ledgroupsize = len(variables.data[defines.data['KLL_LED_FadeGroup'].name].value)
+                for index in range(ledgroupsize):
+                    self.fill_dict['PixelFadeConfig'] += "const uint16_t Pixel_LED_DefaultFadeGroup{}[] = {{\n".format(
+                        index
+                    )
+                    data = variables.data[defines.data['KLL_LED_FadeGroup'].name].value[index]
+                    if data != "":
+                        self.fill_dict['PixelFadeConfig'] += "\t{}\n".format(data)
+                    self.fill_dict['PixelFadeConfig'] += "};\n"
+
+                self.fill_dict['PixelFadeConfig'] += "const PixelLEDGroupEntry Pixel_LED_DefaultFadeGroups[] = {\n"
+                for index in range(ledgroupsize):
+                    # Count number of elements
+                    data = variables.data[defines.data['KLL_LED_FadeGroup'].name].value[index]
+                    count = len(data.split(','))
+                    if data == "":
+                        count = 0
+
+                    self.fill_dict['PixelFadeConfig'] += "\t{{ {}, Pixel_LED_DefaultFadeGroup{} }},\n".format(
+                        count,
+                        index,
+                    )
+                self.fill_dict['PixelFadeConfig'] += "};\n"
+
+                # Add fade periods
+                self.fill_dict['PixelFadeConfig'] += "const PixelPeriodConfig Pixel_LED_FadePeriods[16] = {\n"
+                periodgroupsize = len(variables.data[defines.data['KLL_LED_FadePeriod'].name].value)
+                for index in range(periodgroupsize):
+                    # Construct array
+                    self.fill_dict['PixelFadeConfig'] += "\t{}, // {}\n".format(
+                        variables.data[defines.data['KLL_LED_FadePeriod'].name].value[index],
+                        index,
+                    )
+                self.fill_dict['PixelFadeConfig'] += "};\n"
+
+                def fade_default_config(name):
+                    fadeconfigsize = len(variables.data[defines.data[name].name].value)
+                    self.fill_dict['PixelFadeConfig'] += "\t{ "
+                    for index in range(fadeconfigsize):
+                        self.fill_dict['PixelFadeConfig'] += "{}, ".format(
+                            variables.data[defines.data[name].name].value[index]
+                        )
+                    self.fill_dict['PixelFadeConfig'] += "}}, // {}\n".format(name)
+
+                # Add fade configs
+                self.fill_dict['PixelFadeConfig'] += "const uint8_t Pixel_LED_FadePeriod_Defaults[4][4] = {\n"
+                fade_default_config('KLL_LED_FadeDefaultConfig0')
+                fade_default_config('KLL_LED_FadeDefaultConfig1')
+                fade_default_config('KLL_LED_FadeDefaultConfig2')
+                fade_default_config('KLL_LED_FadeDefaultConfig3')
+                self.fill_dict['PixelFadeConfig'] += "};"
+
+                # Compute total number of channels (LED)
+                totalchannels = "{0} + {1}".format(
+                    variables.data[defines.data['LED_Buffer_Length'].name].value[ledbufsize - 1],
+                    variables.data[defines.data['LED_Buffer_Size'].name].value[ledbufsize - 1],
+                )
 
             ## Pixel Mapping ##
             ## ScanCode to Pixel Mapping ##
@@ -1471,16 +1588,23 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
                     name,
                     aniframeid.index
                 )
+
+                # XXX (HaaTa) This is a bug, but for now this is ok
+                if len(aniframedata) == 1 and isinstance(aniframedata[0], list):
+                    aniframedata = aniframedata[0]
                 for elem in aniframedata:
                     # TODO Determine widths (possibly do checks at an earlier stage to validate)
 
+                    if isinstance(elem, list):
+                        elem = elem[0]
+
                     # Select pixel address type
                     self.fill_dict['AnimationFrames'] += "\n\t{0},".format(
-                        address_type[elem[0].uid.inferred_type()]
+                        address_type[elem.uid.inferred_type()]
                     )
 
                     # For each channel select a pixel address
-                    channels = elem[0].uid.uid_set()
+                    channels = elem.uid.uid_set()
                     channel_str = "/* UNKNOWN CHANNEL {0} */".format(len(channels))
                     if len(channels) == 1:
                         channel_str = " /*{0}*/{1},".format(
@@ -1516,7 +1640,7 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
                     self.fill_dict['AnimationFrames'] += channel_str
 
                     # For each channel, select an operator and value
-                    for pixelmod in elem[0].modifiers:
+                    for pixelmod in elem.modifiers:
                         # Set operator type
                         channel_str = " PixelChange_{0},".format(
                             pixelmod.operator_type()
@@ -1581,6 +1705,7 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
         self.fill_dict['KLLDefines'] += "#define ResultMacroNum_KLL {0}\n".format(len(result_index))
         self.fill_dict['KLLDefines'] += "#define TriggerMacroNum_KLL {0}\n".format(len(trigger_index))
         self.fill_dict['KLLDefines'] += "#define MaxScanCode_KLL {0}\n".format(max(max_scan_code))
+        self.fill_dict['KLLDefines'] += "#define RotationNum_KLL {0}\n".format(max_rotations)
 
         # Only add defines if Pixel Buffer is defined
         if self.use_pixel_map:
