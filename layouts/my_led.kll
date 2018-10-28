@@ -3,6 +3,10 @@
 # my_led.kll
 #
 
+#-------------------------------------------------------------------------------
+# Variables
+#-------------------------------------------------------------------------------
+
 Name = my_led;
 Version = 0.2;
 Author = "Keisuke Shimizu";
@@ -100,6 +104,12 @@ Date = 2016-11-26;
 # 	0x00, 0x00, /* C9-1 -> C9-16 */
 # ";
 
+#-------------------------------------------------------------------------------
+# Capabilities
+#
+# <capability name> => <corresponding C/C++ define>;
+#-------------------------------------------------------------------------------
+
 MyLedBrightness0 => MyLedBrightness0_define;
 MyLedBrightness1 => MyLedBrightness1_define;
 MyLedBrightness2 => MyLedBrightness2_define;
@@ -109,7 +119,13 @@ MyLedBrightness5 => MyLedBrightness5_define;
 MyLedBrightness6 => MyLedBrightness6_define;
 MyLedBrightness7 => MyLedBrightness7_define;
 
+# Capability definition
+#                                          argument name
+#                                          |      byte length of the argument
+#                                          |      |
 myLedControl => my_LED_control_capability( mode : 1, amount : 1, index : 2 );
+
+# Using capability
 
 # # Additional Actions (Left) - must be updated if key map has changed
 
