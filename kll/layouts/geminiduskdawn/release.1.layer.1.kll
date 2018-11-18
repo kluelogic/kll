@@ -1,16 +1,17 @@
-# Kira Layer 1 - Control Layer
-Name = "Kira Control Layer";
-Version = 0.2;
+# Gemini Dusk Dawn Layer 1 - Control Layer
+Name = "Gemini Dusk Dawn Control Layer";
+Version = 0.1;
 Author = "HaaTa (Jacob Alexander) 2018";
 KLL = 0.5;
 
 # Modified Date
-Date = 2018-10-13;
+Date = 2018-11-07;
 
 
+# Animation Layer
+U"Right Shift" : Layer[2];
 
-### Mapping ###
-
+# Mapping
 U"Esc" : flashMode();
 U"F1"  : toggleKbdProtocol(); # 6KRO/NKRO
 U"F2"  : kbdProtocolBoot();   # 6KRO
@@ -22,15 +23,13 @@ U"F11" : storage_control(0); # Load
 U"F12" : storage_control(1); # Save
 
 # Media Keys
-U"Home"      : U"Volume Down" + CONS"Volume Down"; # Volume Down Key
-U"End"       : U"Volume Up"   + CONS"Volume Up";   # Volume Up Key
-U"Page Up"   :                  CONS"Pause Play";  # Play Key
-U"Page Down" : U"Mute"        + CONS"Mute";        # Mute Key
+U"Print"       : CONS"Scan Previous Track";
+U"Volume Up"   : CONS"Scan Next Track";
+U"Volume Down" : CONS"Pause Play"; # Play Key
+U"Insert"      : U"Mute"        + CONS"Mute";        # Mute Key
 
-U"NumLock"         : CONS"Scan Previous Track";
-U"Keypad Slash"    : CONS"Scan Next Track";
-U"Keypad Asterisk" : CONS"Rewind";
-U"Keypad Minus"    : CONS"Fast Forward";
+U"Page Up"   : CONS"Rewind";
+U"Page Down" : CONS"Fast Forward";
 
 # System Control Keys
 U"F5" : CONS"Brightness Increment";
@@ -49,15 +48,15 @@ U"7" : U"International7"; # Byte Toggle
 U"8" : U"International8"; # Kanji8
 U"9" : U"International9"; # Kanji9
 
-U"Keypad 1" : U"LANG1"; # Hangul / English
-U"Keypad 2" : U"LANG2"; # Hanja, Eisu
-U"Keypad 3" : U"LANG3"; # Katakana
-U"Keypad 4" : U"LANG4"; # Hiragana
-U"Keypad 5" : U"LANG5"; # Zenkaku Hankaku
-U"Keypad 6" : U"LANG6"; # LANG6
-U"Keypad 7" : U"LANG7"; # LANG7
-U"Keypad 8" : U"LANG8"; # LANG8
-U"Keypad 9" : U"LANG9"; # LANG9
+U"Q" : U"LANG1"; # Hangul / English
+U"W" : U"LANG2"; # Hanja, Eisu
+U"R" : U"LANG3"; # Katakana
+U"T" : U"LANG4"; # Hiragana
+U"Y" : U"LANG5"; # Zenkaku Hankaku
+U"U" : U"LANG6"; # LANG6
+U"O" : U"LANG7"; # LANG7
+U"Left Bracket" : U"LANG8"; # LANG8
+U"Right Bracket" : U"LANG9"; # LANG9
 
 # Other Keys
 U"A" : U"App";
