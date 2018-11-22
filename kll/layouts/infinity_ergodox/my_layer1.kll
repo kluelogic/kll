@@ -6,7 +6,7 @@
 Name = my_layer1;
 Version = 0.2;
 Author = "Keisuke Shimizu";
-KLL = 0.3d;
+KLL = 0.5;
 
 # Modified Date
 
