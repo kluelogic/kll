@@ -23,7 +23,24 @@ Date = 2018-11-22;
 # A[<label>, <frame>] <= <pixels>;
 #-------------------------------------------------------------------------------
 
-A[tatejima] <= start, pfunc:interp;
+A[yokojima] <= loops:10, framedelay:1;
+A[yokojima, 1] <= P[r:0](255),P[r:1](0),P[r:2](0),P[r:3](0),P[r:4](0),P[r:5](0),P[r:6](0);
+A[yokojima, 2] <= P[r:0](0),P[r:1](255),P[r:2](0),P[r:3](0),P[r:4](0),P[r:5](0),P[r:6](0);
+A[yokojima, 3] <= P[r:0](0),P[r:1](0),P[r:2](255),P[r:3](0),P[r:4](0),P[r:5](0),P[r:6](0);
+A[yokojima, 4] <= P[r:0](0),P[r:1](0),P[r:2](0),P[r:3](255),P[r:4](0),P[r:5](0),P[r:6](0);
+A[yokojima, 5] <= P[r:0](0),P[r:1](0),P[r:2](0),P[r:3](0),P[r:4](255),P[r:5](0),P[r:6](0);
+A[yokojima, 6] <= P[r:0](0),P[r:1](0),P[r:2](0),P[r:3](0),P[r:4](0),P[r:5](255),P[r:6](255);
 
-A[tatejima, 1] <= P[c:2](255), P[r:2](128);
+A[yokonami] <= loops:10, framedelay:4;
+A[yokonami, 1] <= P[r:0](255),P[r:1](63),P[r:2](31),P[r:3](15),P[r:4](7),P[r:5](3),P[r:6](3);
+A[yokonami, 2] <= P[r:0](63),P[r:1](255),P[r:2](63),P[r:3](31),P[r:4](15),P[r:5](7),P[r:6](7);
+A[yokonami, 3] <= P[r:0](31),P[r:1](63),P[r:2](255),P[r:3](63),P[r:4](31),P[r:5](15),P[r:6](15);
+A[yokonami, 4] <= P[r:0](15),P[r:1](31),P[r:2](63),P[r:3](255),P[r:4](63),P[r:5](31),P[r:6](31);
+A[yokonami, 5] <= P[r:0](7),P[r:1](15),P[r:2](31),P[r:3](63),P[r:4](255),P[r:5](63),P[r:6](63);
+A[yokonami, 6] <= P[r:0](3),P[r:1](7),P[r:2](15),P[r:3](31),P[r:4](63),P[r:5](255),P[r:6](255);
 
+#A[yokojima](D) : A[yokonami](start);
+#A[yokonami](D) : A[yokojima](start);
+
+U"A" :+ A[yokonami](start);
+U"S" :+ A[yokojima](start);
