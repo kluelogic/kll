@@ -14,7 +14,7 @@ KLL     = 0.5;
 
 # Modified Date
 
-Date = 2018-10-28;
+Date = 2018-11-25;
 
 #-------------------------------------------------------------------------------
 # Keymapping
@@ -31,20 +31,17 @@ Date = 2018-10-28;
 '='          : U"Esc";
 '\'          : U"Tab";
 U"Tab"       : U"LCtrl";
-U"LGui"      : None;
+U"LGui"      : U"Function1";
 
-'`'          : None;
-U"Function3" : None;
-U"Function4" : None;
-U"Function5" : None;
+'`'          : U"Function2";
 
-U"Esc"       : '6';
-U"Function1" : None;
-U"Function2" : None;
+U"Esc"       : None;
+U"Function1" : '-';
+U"Function2" : '`';
 U"Backspace" : U"Space";
 
 U"LCtrl"     : None;
-U"Delete"    : None;
+U"Delete"    : '[';
 U"LAlt"      : None;
 U"Home"      : None;
 U"End"       : None;
@@ -55,24 +52,18 @@ U"RAlt"      : U"Left";
 U"PageUp"    : U"Up";
 U"PageDown"  : U"Down";
 U"RCtrl"     : U"Right";
-U"Enter"     : None;
+U"Enter"     : ']';
 
-U"Function6" : '7';
-'['          : U"Function1";
-U"Function7" : U"Function2";
+U"Function6" : None;
+'['          : '=';
+U"Function7" : U"Quote";
 
-'6'          : '8';
-'7'          : '9';
-'8'          : '0';
-'9'          : '-';
-'0'          : '=';
-
-U"Left"      : U"Latch1";
-U"Down"      : U"Lock2";
-U"Up"        : None;
-U"Right"     : None;
+U"Left"      : U"Function6";
+U"Down"      : U"Function7";
+U"Up"        : U"Function8";
+U"Right"     : U"Function9";
 
 '-'          : U"Backslash";
 ']'          : U"Backspace";
 U"Quote"     : U"Enter";
-U"RGui"      : U"Backtick";
+U"RGui"      : U"Function10";
