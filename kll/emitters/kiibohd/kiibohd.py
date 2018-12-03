@@ -22,6 +22,7 @@ KLL Kiibohd .h/.c File Emitter
 
 import os
 import sys
+import math
 
 from datetime import date
 
@@ -783,6 +784,18 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
             a_state,
         )
 
+    def generateGammaTable(self, gamma=2.2):
+        '''
+        Generate an 8-bit gamma table
+
+        Based off of a suggestion: https://github.com/kiibohd/controller/issues/255
+
+        TODO (HaaTa): Handle non-8bit as well
+        '''
+        max_in = 255
+        max_out = 255
+        return [round(math.pow(i/max_in, gamma) * max_out) for i in range(0,max_in+1) ]
+
     def process(self):
         '''
         Emitter Processing
@@ -1264,11 +1277,20 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
         if rotation_map.keys():
             max_rotations = max(rotation_map.keys())
         self.fill_dict['RotationParameters'] = 'const uint8_t Rotation_MaxParameter[] = {\n'
+        cur_rotation = 0
         for key, entry in sorted(rotation_map.items()):
+            # Make sure that we also fill in 0 for any non-existent rotations
+            while cur_rotation != key:
+                self.fill_dict['RotationParameters'] += '\t{}, // {}\n'.format(
+                    0,
+                    cur_rotation,
+                )
+                cur_rotation += 1
             self.fill_dict['RotationParameters'] += '\t{}, // {}\n'.format(
                 entry,
                 key,
             )
+            cur_rotation += 1
         self.fill_dict['RotationParameters'] += '};'
 
         ## Pixel Buffer Setup ##
@@ -1466,6 +1488,12 @@ class Kiibohd(Emitter, TextEmitter, JsonEmitter):
                 self.fill_dict['PixelDisplayMapping'] += \
                         ",".join("{0: >3}".format(x) for x in y_list) + ",\n"
             self.fill_dict['PixelDisplayMapping'] += "};"
+
+            ## Gamma Table Generation ##
+            gamma = float(variables.data['LEDGamma'].value) if 'LEDGamma' in variables.data else 1.0
+            self.fill_dict['GammaTable'] = "const uint8_t gamma_table[] = {\n" \
+                                            + ", ".join([str(i) for i in self.generateGammaTable(gamma)]) \
+                                            + "\n};"
 
             ## Animations ##
             # TODO - Use reduced_contexts and generate per-layer (naming gets tricky)
