@@ -23,13 +23,23 @@ Date = 2018-11-22;
 # A[<label>, <frame>] <= <pixels>;
 #-------------------------------------------------------------------------------
 
-A[yokojima] <= loops:10, framedelay:1;
-A[yokojima, 1] <= P[r:0](255),P[r:1](0),P[r:2](0),P[r:3](0),P[r:4](0),P[r:5](0),P[31](0);
-A[yokojima, 2] <= P[r:0](0),P[r:1](255);
-A[yokojima, 3] <= P[r:1](0),P[r:2](255);
-A[yokojima, 4] <= P[r:2](0),P[r:3](255);
-A[yokojima, 5] <= P[r:3](0),P[r:4](255);
-A[yokojima, 6] <= P[r:4](0),P[r:5](255),P[31](255);
+A[updraft] <= loops:10, framedelay:1;
+A[updraft, 1] <= P[r:5](255),P[31](255),P[r:0](0);
+A[updraft, 2] <= P[r:4](255),P[r:5](0),P[31](0);
+A[updraft, 3] <= P[r:3](255),P[r:4](0);
+A[updraft, 4] <= P[r:2](255),P[r:3](0);
+A[updraft, 5] <= P[r:1](255),P[r:2](0);
+A[updraft, 6] <= P[r:0](255),P[r:1](0);
+
+A[tatejima] <= loops:5, framedelay:2;
+A[tatejima, 1] <= P[21](255),P[30](255),P[c:2](255),P[38](0),P[c:16](0);
+A[tatejima, 2] <= P[21](0),P[30](0),P[c:2](0),P[32](255),P[c:4](255),P[33](255);
+A[tatejima, 3] <= P[32](0),P[c:4](0),P[33](0),P[c:6](255);
+A[tatejima, 4] <= P[c:6](0),P[c:8](255);
+A[tatejima, 5] <= P[c:8](0),P[c:10](255);
+A[tatejima, 6] <= P[c:10](0),P[c:12](255);
+A[tatejima, 7] <= P[c:12](0),P[c:14](255);
+A[tatejima, 8] <= P[c:14](0),P[38](255),P[c:16](255);
 
 # Gamma corrected PWM
 # C(31) 255
@@ -51,15 +61,8 @@ A[yokonami, 6] <= P[r:0](1),P[r:1](18),P[r:2](53),P[r:3](106),P[r:4](173),P[r:5]
 #A[yokonami, 9] <= P[r:0](106),P[r:1](173),P[r:2](255),P[r:3](173),P[r:4](106),P[r:5](53),P[31](53);
 #A[yokonami,10] <= P[r:0](173),P[r:1](255),P[r:2](173),P[r:3](106),P[r:4](53),P[r:5](18),P[31](18);
 
-A[tatejima] <= loops:10, framedelay:1;
-A[tatejima, 1] <= P[21](255),P[30](255),P[c:2](255),P[32](0),P[c:4](0),P[33](0),P[c:6](0),P[c:8](0),P[c:10](0),P[c:12](0),P[c:14](0),P[38](0),P[c:16](0);
-A[tatejima, 2] <= P[21](0),P[30](0),P[c:2](0),P[32](255),P[c:4](255),P[33](255);
-A[tatejima, 3] <= P[32](0),P[c:4](0),P[33](0),P[c:6](255);
-A[tatejima, 4] <= P[c:6](0),P[c:8](255);
-A[tatejima, 5] <= P[c:8](0),P[c:10](255);
-A[tatejima, 6] <= P[c:10](0),P[c:12](255);
-A[tatejima, 7] <= P[c:12](0),P[c:14](255);
-A[tatejima, 8] <= P[c:14](0),P[38](255),P[c:16](255);
+#A[beach] <= loops:10, framedelay:1, pfunc:interp;
+#A[beach, 1] <= P[r:0](255),P[r:6](1);
 
 A[snake] <= loops:3, framedelay:0;
 A[snake, 1] <= P[31](0),P[38](255);
@@ -145,10 +148,59 @@ A[snake, 80] <= P[36](0),P[38](255);
 A[snake, 81] <= P[37](0),P[38](255);
 A[snake, 82] <= P[38](0);
 
-#A[yokojima] : A[yokonami](start);
-#A[yokonami] : A[yokojima](start);
+A[uzumaki] <= loops:1, framedelay:0;
+A[uzumaki, 1] <= P[18](255);
+A[uzumaki, 2] <= P[17](255);
+A[uzumaki, 3] <= P[26](255);
+A[uzumaki, 4] <= P[27](255);
+A[uzumaki, 5] <= P[28](255);
+A[uzumaki, 6] <= P[19](255);
+A[uzumaki, 7] <= P[13](255);
+A[uzumaki, 8] <= P[12](255);
+A[uzumaki, 9] <= P[11](255);
+A[uzumaki,10] <= P[10](255);
+A[uzumaki,11] <= P[16](255);
+A[uzumaki,12] <= P[25](255);
+A[uzumaki,13] <= P[34](255);
+A[uzumaki,14] <= P[35](255);
+A[uzumaki,15] <= P[36](255);
+A[uzumaki,16] <= P[37](255);
+A[uzumaki,17] <= P[38](255);
+A[uzumaki,18] <= P[29](255);
+A[uzumaki,19] <= P[20](255);
+A[uzumaki,20] <= P[14](255);
+A[uzumaki,21] <= P[7](255);
+A[uzumaki,22] <= P[6](255);
+A[uzumaki,23] <= P[5](255);
+A[uzumaki,24] <= P[4](255);
+A[uzumaki,25] <= P[3](255);
+A[uzumaki,26] <= P[2](255);
+A[uzumaki,27] <= P[9](255);
+A[uzumaki,28] <= P[15](255);
+A[uzumaki,29] <= P[24](255);
+A[uzumaki,30] <= P[33](255);
+A[uzumaki,31] <= P[32](255);
+A[uzumaki,32] <= P[31](255);
+A[uzumaki,33] <= P[30](255);
+A[uzumaki,34] <= P[21](255);
+A[uzumaki,35] <= P[22](255);
+A[uzumaki,36] <= P[23](255);
+A[uzumaki,37] <= P[8](255);
+A[uzumaki,38] <= P[1](255);
 
-U"Function1" : A[yokojima](start);
-U"Function3" : A[tatejima](start);
-U"Function4" : A[snake](start);
-U"Function5" : A[yokonami](start);
+#A[updraft] : A[yokonami](start);
+#A[yokonami] : A[updraft](start);
+
+# Use the original keymap
+
+U"LGui"      : A[updraft](start);  # F1
+'`'          : A[tatejima](start); # F2
+U"Function3" : A[snake](start);    # F3
+U"Function4" : A[uzumaki](start);  # F4
+U"Function5" : A[yokonami](start); # F5
+# U"Left"      :: None; # F6
+# U"Down"      :: None; # F7
+# U"Up"        :: None; # F8
+# U"Right"     :: None; # F9
+# U"RGui"      :: None; # F10
+

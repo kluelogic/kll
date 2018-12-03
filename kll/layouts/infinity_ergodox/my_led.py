@@ -13,7 +13,9 @@
 #                                                 P[30]
 #                                     P[33] P[32] P[31]
 
-snake_path = ( 38, 29, 20, 14, 7,
+taper_off_snake = True
+
+snake_path = [ 29, 20, 14, 7,
                6, 13, 19, 28, 37,
                36, 27, 18, 12, 5,
                4, 11, 17, 26, 35,
@@ -26,7 +28,10 @@ snake_path = ( 38, 29, 20, 14, 7,
                15, 16, 17, 18, 19, 20,
                29, 28, 27, 26, 25, 24, 23,
                22, 21, 30, 31, 32, 33,
-               34, 35, 36, 37 )
+               34, 35, 36, 37 ]
+
+if taper_off_snake: snake_path.insert( 0, 38 )
+else:               snake_path.append( 38 )
 
 def print_snake( frame, path, head_pos, snake_length ):
     print( 'A[snake, {}] <= '.format( frame ), end = '' )
@@ -34,6 +39,12 @@ def print_snake( frame, path, head_pos, snake_length ):
     print( 'P[{}](0),'.format( path[ tail_pos ] ), end = '' )
     print( 'P[{}](255);'.format( path[ head_pos ] ) )
 
+def snake_dies_out( frame ):
+    for length in range( snake_length, 0, -1 ):
+        print_snake( frame, snake_path, 0, length )
+        frame += 1
+    print( 'A[snake, {}] <= P[{}](0);'.format( frame, snake_path[0] ) )
+    
 # main
 
 frame = 1
@@ -42,9 +53,5 @@ for head_pos in range( len( snake_path ) ): # run a snake
     print_snake( frame, snake_path, head_pos, snake_length )
     frame += 1
 
-# the snake dies out
+if taper_off_snake: snake_dies_out( frame )
 
-for length in range( snake_length, 0, -1 ):
-    print_snake( frame, snake_path, 0, length )
-    frame += 1
-print( 'A[snake, {}] <= P[{}](0);'.format( frame, snake_path[0] ) )
