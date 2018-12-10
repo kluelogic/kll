@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# my_led.py
+# snake.py
 #
 
 # Pixel Position:
