@@ -16,9 +16,9 @@
 checker_list = [ [ 7, 5, 3,  1, 13, 11, 9, 20, 18, 16, 28, 26, 24, 23, 21, 38, 36, 34, 32, 31 ],
                  [ 6, 4, 2, 14, 12, 10, 8, 19, 17, 15, 29, 27, 25, 22,     37, 35, 33,     30 ] ]
 
-def print_checker():
-    on_pixels  = ','.join( [ 'P[{}](+8)'.format( p ) for p in checker_list[0] ] )
-    off_pixels = ','.join( [ 'P[{}](-8)'.format( p ) for p in checker_list[1] ] )
+def print_checker( delta ):
+    on_pixels  = ','.join( [ 'P[{}](+{})'.format( p, delta ) for p in checker_list[0] ] )
+    off_pixels = ','.join( [ 'P[{}](-{})'.format( p, delta ) for p in checker_list[1] ] )
     print( 'A[checker, 1] <= ' + on_pixels + ',' + off_pixels + ';' )
     # on_pixels  = ','.join( [ 'P[{}]()'.format( p ) for p in checker_list[1] ] )
     # off_pixels = ','.join( [ 'P[{}](18)'.format( p ) for p in checker_list[0] ] )
@@ -26,4 +26,4 @@ def print_checker():
 
 # main
 
-print_checker()
+print_checker( delta = 32 )
