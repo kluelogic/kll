@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# tatejima.py
+# stripes.py
 #
 
 # Pixel Position:
@@ -13,23 +13,23 @@
 #                                                 P[30]
 #                                     P[33] P[32] P[31]
 
-tatejima_list = [ [        21, 22, 30, 31 ],
-                  [ 1,  8,     23, 32, 33 ],
-                  [ 2,  9, 15, 24 ],
-                  [ 3, 10, 16, 25, 34 ],
-                  [ 4, 11, 17, 26, 35 ],
-                  [ 5, 12, 18, 27, 36 ],
-                  [ 6, 13, 19, 28, 37 ],
-                  [ 7, 14, 20, 29, 38 ] ]
+stripes_list = [ [        21, 22, 30, 31 ],
+                 [ 1,  8,     23, 32, 33 ],
+                 [ 2,  9, 15, 24 ],
+                 [ 3, 10, 16, 25, 34 ],
+                 [ 4, 11, 17, 26, 35 ],
+                 [ 5, 12, 18, 27, 36 ],
+                 [ 6, 13, 19, 28, 37 ],
+                 [ 7, 14, 20, 29, 38 ] ]
                   
-def print_tatejima():
-    for i, on_list in enumerate( tatejima_list ):
-        frame      = 'A[tatejima, {}] <= '.format( i + 1 )
+def print_stripes():
+    for i, on_list in enumerate( stripes_list ):
+        frame      = 'A[stripes, {}] <= '.format( i + 1 )
         on_pixels  = ','.join( [ 'P[{}](255)'.format( p ) for p in on_list ] )
-        off_list   = tatejima_list[ i - 1 ] # if i == 0 then use the last entry of tatejima_list (i.e. tatejima_list[-1])
+        off_list   = stripes_list[ i - 1 ] # if i == 0 then use the last entry of stripes_list (i.e. stripes_list[-1])
         off_pixels = ','.join( [ 'P[{}](0)'.format( p ) for p in off_list ] )
         print( frame + on_pixels + ',' + off_pixels + ';' )
 
 # main
 
-print_tatejima()
+print_stripes()
