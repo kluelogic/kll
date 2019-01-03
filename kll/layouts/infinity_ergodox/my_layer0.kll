@@ -36,7 +36,7 @@ U"LGui"      : U"Function1";
 '`'          : U"Function2";
 
 U"Esc"       : None;
-U"Function1" : '-';
+U"Function1" : U"Backslash";
 U"Function2" : '`';
 U"Backspace" : U"Space";
 
@@ -63,7 +63,6 @@ U"Down"      : U"Function7";
 U"Up"        : U"Function8";
 U"Right"     : U"Function9";
 
-'-'          : U"Backslash";
 ']'          : U"Backspace";
 U"Quote"     : U"Enter";
 U"RGui"      : U"Function10";

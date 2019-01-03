@@ -15,15 +15,17 @@
 
 import random
 
-board = [ [ 1, 8,   23 ],
-          [ 2, 9,15,24 ],
-          [ 3,10,16,25,34 ],
-          [ 4,11,17,26,35 ],
-          [ 5,12,18,27,36 ],
-          [ 6,13,19,28,37 ],
-          [ 7,14,20,29,38 ] ]
+board = [ [ 22,21,30,31 ],
+          [  1, 8,23,33,32 ],
+          [  2, 9,15,24 ],
+          [  3,10,16,25,34 ],
+          [  4,11,17,26,35 ],
+          [  5,12,18,27,36 ],
+          [  6,13,19,28,37 ],
+          [  7,14,20,29,38 ] ]
 
-snow= [ [ 0,0,0 ],
+snow= [ [ 0,0,0,0 ],
+        [ 0,0,0,0,0 ],
         [ 0,0,0,0 ],
         [ 0,0,0,0,0 ],
         [ 0,0,0,0,0 ],
@@ -34,19 +36,28 @@ snow= [ [ 0,0,0 ],
 def random_bool( probability ):
     return random.randint( 0, 100 ) < probability # randint generates a number between 0 and 100
 
-def find_gap_from_the_bottom( path ):
-    for i in range( len( path ) - 1, 0, -1 ):
-        if path[i] == 0: return i # found gap
+def find_val_from_the_bottom( path, val = 0 ):
+    for i in range( len( path ) - 1, -1, -1 ):
+        if path[i] == val: return i # found val
+    return -1
+
+def find_val_from_the_top( path, val = 0 ):
+    for i in range( len( path ) ):
+        if path[i] == val: return i # found val
     return -1
 
 def snow_fall( appear_prob, disappear_prob ):
     for i, path in enumerate( snow ):
         if path[-1] == 1: # snow at the bottom
             if random_bool( disappear_prob ): path[-1] = 0 # randomly remove the snow at the bottom
-        gap_pos = find_gap_from_the_bottom( path )
+        gap_pos = find_val_from_the_bottom( path, val = 0 )
         if gap_pos >= 0:
-            if random_bool( appear_prob ): val = 1
-            else:                          val = 0
+            snow_pos = find_val_from_the_top( path, val = 1 )
+            if snow_pos == -1 or gap_pos < snow_pos: # no snow or snow on pile
+                if random_bool( appear_prob ): val = 1
+                else:                          val = 0
+            else:
+                val = 0
             snow[i] = [ val ] + path[:gap_pos] + path[gap_pos + 1:] # remove gap
                   
 def print_snow( num_frames, appear_prob, disappear_prob ):
@@ -70,7 +81,8 @@ def print_snow( num_frames, appear_prob, disappear_prob ):
 
 # main
 
-num_frames     = 50
+#random.seed( 1 )
+num_frames     = 100
 appear_prob    = 20
-disappear_prob = 20
+disappear_prob = 0
 print_snow( num_frames, appear_prob, disappear_prob )
